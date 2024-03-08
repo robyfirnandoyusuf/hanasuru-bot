@@ -1,0 +1,6 @@
+2024/03/09-00:37:39.526 2ee3 Reusing MANIFEST /var/www/html/bot-sahur/.wwebjs_auth/session/Default/Local Storage/leveldb/MANIFEST-000001
+2024/03/09-00:37:39.528 2ee3 Recovering log #3
+2024/03/09-00:37:39.528 2ee3 Reusing old log /var/www/html/bot-sahur/.wwebjs_auth/session/Default/Local Storage/leveldb/000003.log 
+2024/03/09-00:40:39.906 2ef1 Level-0 table #5: started
+2024/03/09-00:40:39.921 2ef1 Level-0 table #5: 15785 bytes OK
+2024/03/09-00:40:39.927 2ef1 Delete type=0 #3
