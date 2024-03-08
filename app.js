@@ -55,7 +55,7 @@ client.on('message', async msg => {
     }
 
     if (msg.body.startsWith('!tentang')) {
-        msg.reply(`Yahoo!\nKenalin namaku Hanasuru-bot, aku diprogram untuk ngebangunin sahurmu oleh tuanku @aaronw_omens 😊! Marhaban ya ramadhan sayangku 😗!`);
+        msg.reply(`Yahoo!\nKenalin namaku *Hanasuru-bot*, aku diprogram untuk ngebangunin sahurmu oleh tuanku *@aaronw_omens* 😊! Marhaban ya ramadhan sayangku 😗!`);
     }
 
     if (msg.hasMedia && msg.body.startsWith('!sticker')) {
