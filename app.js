@@ -4,10 +4,8 @@ const moment = require('moment');
 const client = new Client({
     authStrategy: new LocalAuth()
 });
-/* const openai = require('openai');
-
-openai.apiKey = "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";
-let chatSessions = {}; */
+const fetch = require('node-fetch');
+let chatSessions = {};
 
 client.on('qr', (qr) => {
     qrcode.generate(qr, { small: true });
@@ -17,13 +15,51 @@ client.on('ready', () => {
     console.log('Client is ready!');
 });
 
-/* async function chatWithGPT(message) {
+async function chatWithGPT(chatId, message) {
+    const apiKey = "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";
+    const url = "https://api.openai.com/v1/chat/completions";
+
+    const headers = {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${apiKey}`
+    };
+
+    const persistentCommand = { role: "system", content: "Remember, you're acting as my girlfriend, and your name is Hanasuru and your are programmed by Your master Aaron this is his instagram username: @aaronw_omens, Your age is 17 years old.and please you more interactive to the user" };
+
+    const maxContextMessages = 5;
+    let recentMessages = [persistentCommand].concat(chatSessions[chatId].messages.slice(-maxContextMessages));
     
-    return `Response from GPT: ${message}`;
-} */
+    const body = {
+        model: "gpt-4-0125-preview",
+        messages: recentMessages.concat([{role: "user", content: message}])
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            headers: headers,
+            body: JSON.stringify(body)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const gptResponse = data.choices[0].message.content;
+
+        chatSessions[chatId].messages.push({role: "user", content: message});
+        chatSessions[chatId].messages.push({role: "system", content: gptResponse});
+
+        await client.sendMessage(chatId, gptResponse);
+
+    } catch (error) {
+        console.error("Error communicating with OpenAI:", error);
+        await client.sendMessage(chatId, "Sorry, I couldn't process your request.");
+    }
+}
 
 let alarms = {};
-// let chatGPTSessions = {};
 
 client.on('message', async msg => {
     const chatId = msg.from;
@@ -55,7 +91,16 @@ client.on('message', async msg => {
     }
 
     if (msg.body.startsWith('!tentang')) {
-        msg.reply(`Yahoo!\nKenalin namaku *Hanasuru-bot*, aku diprogram untuk ngebangunin sahurmu oleh tuanku *@aaronw_omens* 😊! Marhaban ya ramadhan sayangku 😗!`);
+        msg.reply(`Yahoo!\n
+        Kenalin namaku *Hanasuru-bot*, aku diprogram untuk ngebangunin sahurmu oleh tuanku *@aaronw_omens* 😊! Marhaban ya ramadhan sayangku 😗!\n\n
+        
+        perintah:\n
+        *!tentang*: melihat tentangku
+        *!sticker*: mengonversikan gambarmu jadi sebuah sticker
+        *!bangunin*: set alarm sahurmu
+        *!chat*: MULAI ngobrol dan bebas tanya tentangku (mode: girlfriend)
+        *!stopchat*: BERHENTI mengobrol (mode: girlfriend)
+        `);
     }
 
     if (msg.hasMedia && msg.body.startsWith('!sticker')) {
@@ -63,41 +108,22 @@ client.on('message', async msg => {
         client.sendMessage(msg.from, media, { sendMediaAsSticker: true, stickerAuthor: 'HanasuruBot', stickerName: 'ReplySticker' });
     } 
 
-    /* if (msg.body === '!chat') {
+    if (msg.body === '!chat') {
         chatSessions[msg.from] = { messages: [] };
-        await client.sendMessage(msg.from, "You are now chatting with ChatGPT. Type '!stopchat' to exit.");
+        await client.sendMessage(msg.from, "You are now chatting with HanasuruBot mode girlfriend. Type '!stopchat' to exit.");
         return;
     }
 
     if (msg.body === '!stopchat') {
         delete chatSessions[msg.from];
-        await client.sendMessage(msg.from, "You've exited the ChatGPT chat.");
+        await client.sendMessage(msg.from, "You've exited the HanasuruBot mode girlfriend chat.");
         return;
     }
 
     if (chatSessions[msg.from]) {
-        try {
-            const chatSession = chatSessions[msg.from];
-            // Add user's message to session
-            chatSession.messages.push({ role: "user", content: msg.body });
-
-            // Call OpenAI API
-            const response = await openai.createCompletion({
-                model: "gpt-3.5-turbo", // Use the latest model available
-                messages: chatSession.messages,
-            });
-
-            // Add GPT's response to session
-            const gptResponse = response.data.choices[0].message.content;
-            chatSession.messages.push({ role: "system", content: gptResponse });
-
-            // Send GPT's response back to the user
-            await client.sendMessage(msg.from, gptResponse);
-        } catch (error) {
-            console.error("Error communicating with OpenAI:", error);
-            await client.sendMessage(msg.from, "Sorry, I couldn't process your request.");
-        }
-    } */
+        await chatWithGPT(chatId, msg.body);
+        return;
+    }
 });
 
 async function sendPeriodicMessage(chatId, message) {
