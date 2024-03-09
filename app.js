@@ -16,7 +16,7 @@ client.on('ready', () => {
 });
 
 async function chatWithGPT(chatId, message) {
-    const apiKey = "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";
+    const apiKey = "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";
     const url = "https://api.openai.com/v1/chat/completions";
 
     const headers = {
@@ -109,18 +109,21 @@ client.on('message', async msg => {
     } 
 
     if (msg.body === '!chat') {
-        chatSessions[msg.from] = { messages: [] };
-        await client.sendMessage(msg.from, "You are now chatting with HanasuruBot mode girlfriend. Type '!stopchat' to exit.");
+        chatSessions[msg.from] = { messages: [], active: true };
+        await client.sendMessage(msg.from, "You are now chatting with HanasuruBot in girlfriend mode. Type '!stopchat' to exit.");
         return;
     }
 
     if (msg.body === '!stopchat') {
-        delete chatSessions[msg.from];
-        await client.sendMessage(msg.from, "You've exited the HanasuruBot mode girlfriend chat.");
+        if (chatSessions[msg.from]) {
+            delete chatSessions[msg.from];
+        }
+        await client.sendMessage(msg.from, "You've exited the HanasuruBot girlfriend mode chat.");
         return;
     }
 
-    if (chatSessions[msg.from]) {
+    // Check if there is an active chat session for this user
+    if (chatSessions[msg.from] && chatSessions[msg.from].active) {
         await chatWithGPT(chatId, msg.body);
         return;
     }
