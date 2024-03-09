@@ -1,7 +1,7 @@
 const fetch = require('node-fetch'); // Only necessary if you're using Node.js
 
 async function main() {
-    const apiKey = "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"; // Use an environment variable in production
+    const apiKey = "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"; // Use an environment variable in production
     const url = "https://api.openai.com/v1/chat/completions"; // Adjust if the API version changes
     const headers = {
         "Content-Type": "application/json",
@@ -41,7 +41,7 @@ async function main() {
         });
 
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            throw new Error(`HTTP error! status: ${response.body}`);
         }
 
         const data = await response.json();

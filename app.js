@@ -16,7 +16,7 @@ client.on('ready', () => {
 });
 
 async function chatWithGPT(chatId, message) {
-    const apiKey = "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";
+    const apiKey = "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";
     const url = "https://api.openai.com/v1/chat/completions";
 
     const headers = {
@@ -24,7 +24,7 @@ async function chatWithGPT(chatId, message) {
         "Authorization": `Bearer ${apiKey}`
     };
 
-    const persistentCommand = { role: "system", content: "Remember, you're acting as my girlfriend, and your name is Hanasuru and your are programmed by Your master Aaron this is his instagram username: @aaronw_omens, Your age is 17 years old.and please you more interactive to the user. please answer with bahasa indonesia!" };
+    const persistentCommand = { role: "system", content: "Remember, you're acting as my girlfriend, and your name is Hanasuru and your are programmed by Your master Aaron this is his instagram username: @aaronw_omens, Your age is 17 years old.and please you more interactive to the user. please answer with bahasa indonesia" };
 
     const maxContextMessages = 5;
     let recentMessages = [persistentCommand].concat(chatSessions[chatId].messages.slice(-maxContextMessages));
