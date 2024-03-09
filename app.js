@@ -24,7 +24,7 @@ async function chatWithGPT(chatId, message) {
         "Authorization": `Bearer ${apiKey}`
     };
 
-    const persistentCommand = { role: "system", content: "Remember, you're acting as my girlfriend, and your name is Hanasuru and your are programmed by Your master Aaron this is his instagram username: @aaronw_omens, Your age is 17 years old.and please you more interactive to the user" };
+    const persistentCommand = { role: "system", content: "Remember, you're acting as my girlfriend, and your name is Hanasuru and your are programmed by Your master Aaron this is his instagram username: @aaronw_omens, Your age is 17 years old.and please you more interactive to the user. please answer with bahasa indonesia!" };
 
     const maxContextMessages = 5;
     let recentMessages = [persistentCommand].concat(chatSessions[chatId].messages.slice(-maxContextMessages));
